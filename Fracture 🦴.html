@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fracture 🦴</title>
+<style>
+:root{--b1:#fffaf5;--b2:#fff4f7;--b3:#f5faff;--cd:rgba(255,255,255,.88);--tx:#4a3a4f;--pk:#ff9fb8;--or:#ffb88c;--bl:#9fd0ff;--p2:#ffe6ee;--ok:#d6ecff;--okb:#86c2f5;--bad:#ffd3c8;--sel:#ffe6bf;--bd:#f6d3dc;--pr:#e0708f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--b1:#3a2a33;--b2:#33283c;--b3:#243246;--cd:rgba(60,48,66,.9);--tx:#fbeaf0;--pk:#e58aa6;--or:#e0976a;--bl:#6fa8de;--p2:#4d3345;--ok:#27425c;--okb:#5b9ad0;--bad:#6b3a35;--sel:#5d4a2c;--bd:#5a4259;--pr:#ffa6c4}}
+:root[data-theme="dark"]{--b1:#3a2a33;--b2:#33283c;--b3:#243246;--cd:rgba(60,48,66,.9);--tx:#fbeaf0;--pk:#e58aa6;--or:#e0976a;--bl:#6fa8de;--p2:#4d3345;--ok:#27425c;--okb:#5b9ad0;--bad:#6b3a35;--sel:#5d4a2c;--bd:#5a4259;--pr:#ffa6c4}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{background:linear-gradient(170deg,var(--b1),var(--b2) 50%,var(--b3)) fixed;color:var(--tx);font:16px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;padding:0 10px 40px;max-width:640px;margin:auto}
+header{text-align:center;padding:12px 0 4px}h1{font-size:20px;margin:0}h2{font-size:18px;margin:14px 0 6px}
+.sub{font-size:14px;opacity:.8;margin:2px 0 8px}#top{text-align:right;font-size:14px}
+#nav{display:flex;gap:6px;overflow-x:auto;padding:6px 0;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:linear-gradient(var(--b1),transparent)}
+#nav button{flex:none;border:2px solid var(--bd);background:var(--cd);color:var(--tx);border-radius:14px;padding:6px 10px;font-size:14px}
+#nav button.on{background:linear-gradient(120deg,var(--or),var(--pk));border-color:transparent;color:#fff}
+.card{background:var(--cd);border:2px solid var(--bd);border-radius:18px;padding:10px 12px;margin:8px 0;box-shadow:0 3px 10px rgba(255,160,180,.15)}
+.en{font-weight:700;font-size:17px}.pr{color:var(--pr);font-size:14px}.ru{font-size:15px;opacity:.9}
+.row{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+button{font:inherit;cursor:pointer}.sp{border:0;background:var(--p2);border-radius:50%;width:34px;height:34px;flex:none}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fc{min-height:84px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:linear-gradient(150deg,var(--p2),var(--b1));border:2px solid var(--bd);border-radius:18px;color:var(--tx);padding:8px}
+.fc.f{background:linear-gradient(150deg,var(--ok),var(--b3))}
+.opt,.chip,.stp,.mt button{border:2px solid var(--bd);background:var(--cd);color:var(--tx);border-radius:12px;padding:8px 10px;margin:3px;text-align:left}
+.mt button{margin:0;width:100%}.opt{display:block;width:100%;margin:6px 0}
+.sel{background:var(--sel)!important}.ok{background:var(--ok)!important;border-color:var(--okb)!important}.bad{background:var(--bad)!important}
+.go{border:0;background:linear-gradient(120deg,var(--or),var(--pk));color:#fff;border-radius:12px;padding:9px 16px;margin-top:8px}
+.ans{min-height:44px;border-bottom:2px dashed var(--bd);margin:6px 0}.msg{min-height:22px;font-weight:700}
+.shake{animation:sh .3s}@keyframes sh{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+input{font:inherit;border:2px solid var(--bd);border-radius:10px;padding:6px 8px;width:130px;background:var(--cd);color:var(--tx)}
+.bar{height:14px;background:var(--p2);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--or),var(--pk));transition:width .4s}
+.big{text-align:center;font-size:20px;padding:16px 0}
+</style></head><body>
+<header><h1>🦴 Fracture 🌅</h1><div class="sub">Перелом</div><div id="top">Звёздочки: ⭐ <b id="st">0</b></div></header>
+<div id="nav"></div><div id="main"></div>
+<script>
+const $=s=>document.querySelector(s);
+const E=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.innerHTML=x;return e};
+const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+let stars=0,cur=0,M=$("#main");const win=(n=1)=>{stars+=n;$("#st").textContent=stars};
+const say=(t,r)=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=r||.8;speechSynthesis.speak(u)}catch(e){}};
+const S=[
+["Fracture or break in the bone can result from any injury.","Перелом или трещина в кости может возникнуть из-за любой травмы.","фрЭкчэ ор брэйк ин зэ боун кэн рИзалт фром Эни ИнджЭри"],
+["There is a pain, swelling and tenderness and there may be a deformity.","Есть боль, опухоль и болезненность, и может быть деформация.","зэр из э пэйн, суЭлин энд тЭндэнис энд зэр мэй би э дифОмити"],
+["The injured part should be prevented from moving.","Повреждённую часть нужно уберечь от движения.","зи Инджэд пат шуд би привЭнтид фром мУвин"],
+["Usually, an X-ray is necessary to confirm whether there is a fracture or not.","Обычно нужен рентген, чтобы подтвердить, есть перелом или нет.","ЮжуэЛи, эн Экс-рэй из нЭсэсри ту конфЁм уЭзэ зэр из э фрЭкчэ ор нот"],
+["The injured part can be immobilized with a splint.","Повреждённую часть можно обездвижить шиной.","зи Инджэд пат кэн би имОубилайзд уиз э сплинт"],
+["A splint can be ready-made or improvised from any stiff material (stick, ruler, magazine and so on).","Шина может быть готовой или сделанной из любого жёсткого материала (палка, линейка, журнал и так далее).","э сплинт кэн би рЭди-мэйд ор Импровайзд фром Эни стиф мэтИриэл (стик, рУлэ, мэгэзИн энд соу он)"],
+["The splint should be wider than the limb being splinted, and long enough to prevent movements of the joints near the fracture.","Шина должна быть шире конечности, которую фиксируют, и достаточно длинной, чтобы предотвратить движения суставов возле перелома.","зэ сплинт шуд би уАйдэ зэн зэ лим бИин сплИнтид, энд лон инАф ту привЭнт мУвментс ов зэ джойнтс нИэ зэ фрЭкчэ"],
+["Bind the splint in place above and below the fracture.","Привяжи шину на месте выше и ниже перелома.","байнд зэ сплинт ин плэйс эбАв энд билОу зэ фрЭкчэ"],
+["If the person has a compound fracture you must take some sterile gauze, put it over the wound and take the patient to the hospital immediately.","Если у человека сложный (открытый) перелом, нужно взять стерильную марлю, положить на рану и сразу отвезти пациента в больницу.","иф зэ пЁрсн хэз э кОмпаунд фрЭкчэ ю маст тэйк сам стЭрайл гоз, пут ит Оува зэ уунд энд тэйк зэ пЭйшент ту зэ хОспитл имИдиэтли"],
+["A compound fracture is more serious, in which broken bone has pierced the skin.","Сложный перелом серьёзнее: сломанная кость проткнула кожу.","э кОмпаунд фрЭкчэ из мор сИриэс, ин уИч брОукн боун хэз пиэст зэ скин"]];
+const W=[["fracture","перелом","фрЭкчэ","🦴"],["break","ломать, перелом","брэйк","💥"],["bone","кость","боун","🦴"],["pain","боль","пэйн","😣"],["swelling","опухоль","суЭлин","🎈"],["tenderness","болезненность","тЭндэнис","🤏"],["confirm","подтверждать","конфЁм","✅"],["immobilize","делать неподвижным","имОубилайз","🧊"],["splint","шина","сплинт","🪵"],["stiff","жёсткий","стиф","🧱"],["limb","конечность","лим","🦵"],["joint","сустав","джойнт","🔗"],["bind","привязывать","байнд","🎀"],["above","наверху","эбАв","⬆️"],["below","ниже","билОу","⬇️"],["compound","сложный","кОмпаунд","🧩"],["sterile","стерильный","стЭрайл","🧼"],["gauze","марля","гоз","🩹"],["pierce","пронзать","пиэс","📌"]];
+const ST=[["Prevent the injured part from moving.","Не давай повреждённой части двигаться."],["Take a stiff material: a stick or a ruler.","Возьми жёсткий материал: палку или линейку."],["Bind the splint above and below the fracture.","Привяжи шину выше и ниже перелома."],["Put sterile gauze over the wound.","Положи стерильную марлю на рану."],["Take the patient to the hospital.","Отвези пациента в больницу."]];
+const tr=k=>({q:S[k][0],o:[S[k][1],...sh(S.filter((_,j)=>j!=k).map(s=>s[1])).slice(0,2)],a:0});
+const Q1=[0,3,4,7,9].map(tr);
+const Q2=[
+{q:"Fracture or break in the ___ can result from any injury.",ru:"Перелом или трещина в кости может возникнуть из-за любой травмы.",o:["bone","skin","pain"],a:0},
+{q:"Bind the splint in place ___ and below the fracture.",ru:"Привяжи шину на месте выше и ниже перелома.",o:["stiff","above","limb"],a:1},
+{q:"The injured part can be immobilized with a ___.",ru:"Повреждённую часть можно обездвижить шиной.",o:["gauze","joint","splint"],a:2},
+{q:"Put sterile ___ over the wound.",ru:"Положи стерильную марлю на рану.",o:["gauze","bone","swelling"],a:0},
+{q:"A compound fracture is more ___.",ru:"Сложный перелом серьёзнее.",o:["sterile","serious","stiff"],a:1}];
+const TF=["Правда ✅","Неправда ❌"];
+const Q3=[
+{q:"There is a pain, swelling and tenderness.",ru:"Есть боль, опухоль и болезненность.",o:TF,a:0},
+{q:"An X-ray is never necessary.",ru:"Рентген никогда не нужен.",o:TF,a:1},
+{q:"A splint can be a stick or a ruler.",ru:"Шиной может быть палка или линейка.",o:TF,a:0},
+{q:"Bind the splint only above the fracture.",ru:"Привяжи шину только выше перелома.",o:TF,a:1},
+{q:"In a compound fracture, the bone pierces the skin.",ru:"При сложном переломе кость протыкает кожу.",o:TF,a:0}];
+const wl=i=>{const w=W[i];return{say:w[0],slow:.65,q:"Что ты услышала?",o:[w[0],...sh(W.filter((_,j)=>j!=i).map(x=>x[0])).slice(0,2)],a:0,f:`${w[0]} = ${w[1]} ${w[3]}`}};
+const sl=k=>({say:S[k][0],q:"Что значит это предложение?",o:tr(k).o,a:0,f:S[k][0]});
+const QL=[...[2,3,8,11,17,18].map(wl),...[7,4,2].map(sl)];
+const BOSS=[
+{q:"The injured part can be ___ with a splint.",ru:"Повреждённую часть можно обездвижить шиной.",o:["immobilized","pierced","confirmed"],a:0},
+{q:"Что значит <b>joint</b>?",o:["марля","сустав","кость"],a:1},
+{q:"A splint should be narrower than the limb.",ru:"Шина должна быть уже конечности.",o:TF,a:1},
+tr(8),
+{q:"Открытый перелом: что сделать с раной?",o:["Привязать шину только ниже","Ничего не делать","Положить стерильную марлю"],a:2,f:"Put sterile gauze over the wound. 🩹"},
+{q:"Что значит <b>pierce</b>?",o:["ломать","пронзать","привязывать"],a:1},
+{q:"Что значит <b>stiff</b>?",o:["мягкий","стерильный","жёсткий"],a:2},
+tr(3)];
+
+function text(){M.append(E("h2","","1. Читаем по предложениям 📖"),E("p","sub","Нажми 🔊 и послушай. Читай русскими буквами, ударение — большая буква."));
+S.forEach((s,i)=>{const c=E("div","card");c.innerHTML=`<div class="row"><div><div class="en">${i+1}. ${s[0]}</div><div class="pr">[ ${s[2]} ]</div><div class="ru">${s[1]}</div></div><button class="sp">🔊</button></div>`;c.querySelector("button").onclick=()=>say(s[0]);M.append(c)})}
+
+function cards(){M.append(E("h2","","2. Карточки слов 🃏"),E("p","sub","Нажми на карточку: увидишь перевод и как читать."));
+const g=E("div","grid");W.forEach(w=>{const fr=`<div style="font-size:26px">${w[3]}</div><div class="en">${w[0]}</div>`,b=E("button","fc",fr);let f=0;b.onclick=()=>{f=!f;b.classList.toggle("f",f);b.innerHTML=f?`<div class="ru"><b>${w[1]}</b></div><div class="pr">[ ${w[2]} ]</div>`:fr;if(f)say(w[0])};g.append(b)});M.append(g)}
+
+function match(){M.append(E("h2","","3. Найди пару 🔗"),E("p","sub","Сначала слово слева, потом перевод справа."));
+const P=[0,2,3,4,8,11,13,17].map(i=>W[i]),box=E("div","grid"),c1=E("div","mt"),c2=E("div","mt");let sel=null,left=P.length;
+c1.style.display=c2.style.display="grid";c1.style.gridTemplateColumns=c2.style.gridTemplateColumns="1fr";c1.style.gap=c2.style.gap="6px";
+sh(P).forEach(p=>{const b=E("button","",`${p[3]} ${p[0]}`);b.onclick=()=>{[...c1.children].forEach(x=>x.classList.remove("sel"));if(b.classList.contains("ok"))return;sel={p,b};b.classList.add("sel")};c1.append(b)});
+sh(P).forEach(p=>{const b=E("button","",p[1]);b.onclick=()=>{if(!sel||b.classList.contains("ok"))return;if(sel.p===p){sel.b.classList.remove("sel");sel.b.classList.add("ok");b.classList.add("ok");sel=null;win();if(!--left)M.append(E("div","big","🎉 Все пары найдены!"))}else{b.classList.add("bad","shake");setTimeout(()=>b.classList.remove("bad","shake"),400)}};c2.append(b)});
+box.append(c1,c2);M.append(box)}
+
+function mc(items,title,sub,lives){
+M.append(E("h2","",title),E("p","sub",sub));let i=0,ok=0,L=lives||0;const hud=E("div"),box=E("div");M.append(hud,box);
+const go=()=>{box.innerHTML="";
+if(lives)hud.innerHTML=`<div>${"❤️".repeat(L)}${"🖤".repeat(3-L)} &nbsp; 🐲 Босс Перелом</div><div class="bar"><i style="width:${(items.length-ok)/items.length*100}%"></i></div>`;
+const again=()=>{const r=E("button","go","Ещё раз 🔄");r.onclick=()=>show(cur);box.append(r)};
+if(lives&&L==0){box.append(E("div","big","🐲 Босс победил... Попробуй ещё раз! 💪"));again();return}
+if(i>=items.length){box.append(E("div","big",lives?"🎉🐲💥 Ты победила босса! Ты настоящая медсестра! 🩺":(ok==items.length?"🎉 Супер! Всё верно!":`🌸 Готово: ${ok} из ${items.length}`)));again();if(lives)win(5);return}
+const it=items[i],c=E("div","card");c.append(E("div","en",`${i+1}/${items.length}. ${it.say?"🎧 ":""}${it.q}`));if(it.ru)c.append(E("div","ru",it.ru));
+if(it.say){const b=E("button","go","🔊 Слушать");b.onclick=()=>say(it.say,it.slow);c.append(b);setTimeout(()=>say(it.say,it.slow),300)}
+const info=E("div","msg");let done=0;
+sh(it.o.map((t,k)=>[t,k==it.a])).forEach(([t,r])=>{const b=E("button","opt",t);b.onclick=()=>{if(done)return;
+if(r){done=1;ok++;win();b.classList.add("ok");info.innerHTML="✅ Верно! "+(it.f||"")+`<br><button class="go">Дальше ➡️</button>`}
+else{b.classList.add("bad","shake");if(lives||it.say){if(lives)L--;done=1;info.innerHTML=`💔 Мимо! Верно: <b>${it.o[it.a]}</b> ${it.f?"<br>"+it.f:""}<br><button class="go">Дальше ➡️</button>`;[...c.querySelectorAll(".opt")].forEach(x=>{if(x.textContent==it.o[it.a])x.classList.add("ok")})}else info.textContent="🙈 Попробуй ещё"}
+if(done){i++;info.querySelector("button").onclick=go}};c.append(b)});c.append(info);box.append(c)};go()}
+
+function typing(){M.append(E("h2","","7. Напиши по-английски ⌨️"),E("p","sub","Напиши слово. Подсказка — первая буква."));
+[["перелом","fracture","🦴"],["кость","bone","🦴"],["боль","pain","😣"],["шина","splint","🪵"],["марля","gauze","🩹"],["сустав","joint","🔗"]].forEach(([ru,en,em])=>{
+const c=E("div","card row");c.innerHTML=`<div>${em} <b>${ru}</b></div><div><input placeholder="${en[0]}…" autocapitalize="off" autocomplete="off"> <button class="sp">✔️</button></div>`;
+const inp=c.querySelector("input"),chk=()=>{if(inp.value.trim().toLowerCase()==en){c.classList.add("ok");inp.disabled=true;win()}else{c.classList.add("shake");setTimeout(()=>c.classList.remove("shake"),400)}};
+c.querySelector("button").onclick=chk;inp.onkeydown=e=>{if(e.key=="Enter")chk()};M.append(c)})}
+
+function order(){M.append(E("h2","","8. Собери предложение 🧩"),E("p","sub","Нажимай слова по порядку. Нажми на слово сверху — оно вернётся."));
+[S[2],S[4],S[7],ST[3]].forEach(([en,ru])=>{const ws=en.split(" "),pool=sh(ws.map(t=>({t}))),c=E("div","card"),ans=E("div","ans"),bank=E("div"),msg=E("div","msg");let cu=[];
+const draw=()=>{ans.innerHTML="";bank.innerHTML="";cu.forEach(w=>{const b=E("button","chip",w.t);b.onclick=()=>{cu=cu.filter(x=>x!==w);draw()};ans.append(b)});
+pool.filter(w=>!cu.includes(w)).forEach(w=>{const b=E("button","chip",w.t);b.onclick=()=>{cu.push(w);draw()};bank.append(b)});
+if(cu.length==ws.length){const ok=cu.map(w=>w.t).join(" ")==en;msg.textContent=ok?"✅ Верно!":"🙈 Попробуй ещё";if(ok&&!c.d){c.d=1;win()}}else msg.textContent=""};
+c.append(E("div","ru","🇷🇺 "+ru),ans,bank,msg);draw();M.append(c)})}
+
+function steps(){M.append(E("h2","","9. Первая помощь по порядку 🔢"),E("p","sub","Нажимай шаги от 1 до 5. (Шаг с марлей — при открытом переломе.)"));
+let n=0;const msg=E("div","big");sh(ST).forEach(s=>{const b=E("button","stp",`<div class="en">${s[0]}</div><div class="ru">${s[1]}</div>`);b.style.cssText="display:block;width:100%;margin:6px 0";
+b.onclick=()=>{if(b.classList.contains("ok"))return;if(ST[n]===s){n++;b.classList.add("ok");b.insertAdjacentHTML("afterbegin",`<b>${["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣"][n-1]}</b> `);win();if(n==5)msg.textContent="🎉 Всё верно! Пациент в надёжных руках! 🩺"}else{b.classList.add("bad","shake");setTimeout(()=>b.classList.remove("bad","shake"),400)}};M.append(b)});M.append(msg)}
+
+const T=[["📖","Текст",text],["🃏","Слова",cards],["🔗","Пары",match],["📚","Тексты",texts],["🎧","Слушай",()=>mc(QL,"4. Аудирование 🎧","Нажми 🔊 и выбери, что сказал диктор. Сначала слова, потом предложения.")],["🎯","Перевод",()=>mc(Q1,"5. Выбери перевод 🎯","Какой перевод верный?")],["✏️","Пропуски",()=>mc(Q2,"6. Вставь слово ✏️","Выбери слово для пропуска.")],["⌨️","Печатай",typing],["🧩","Порядок",order],["🔢","Шаги",steps],["👍","Правда?",()=>mc(Q3,"10. Правда или нет? 👍","Подходит ли предложение к тексту?")],["🐲","БОСС",()=>mc(BOSS,"🐲 ФИНАЛЬНЫЙ БОСС: Перелом","У тебя 3 жизни ❤️ Победи босса!",3)]];
+const TX=[["🌳 Tom and the Tree","Том и дерево",[["Tom is ten years old.","Тому десять лет.","том из тэн йиэз оулд"],["He falls from a tree.","Он падает с дерева.","хи фолз фром э три"],["He has a pain in his leg and there is swelling.","У него боль в ноге и есть опухоль.","хи хэз э пэйн ин хиз лэг энд зэр из суЭлин"],["His mother takes a ruler and binds it to his leg.","Его мама берёт линейку и привязывает её к его ноге.","хиз мАзэ тэйкс э рУлэ энд байндз ит ту хиз лэг"],["It is a splint.","Это шина.","ит из э сплинт"],["At the hospital, the doctor makes an X-ray and confirms the fracture.","В больнице врач делает рентген и подтверждает перелом.","эт зэ хОспитл, зэ дОктэ мэйкс эн экс-рэй энд конфЁмз зэ фрЭкчэ"]],"Tom is twelve years old.","Тому двенадцать лет.",1],["👩‍⚕️ Anna the Nurse","Анна, медсестра",[["Anna is a nurse.","Анна медсестра.","Эна из э нёрс"],["A man has a compound fracture.","У мужчины сложный перелом.","э мэн хэз э кОмпаунд фрЭкчэ"],["The broken bone pierces the skin.","Сломанная кость протыкает кожу.","зэ брОукн боун пИэсиз зэ скин"],["Anna takes sterile gauze and puts it over the wound.","Анна берёт стерильную марлю и кладёт её на рану.","Эна тэйкс стЭрайл гоз энд путс ит Оува зэ уунд"],["The man must not move.","Мужчина не должен двигаться.","зэ мэн маст нот мув"],["She takes him to the hospital immediately.","Она сразу везёт его в больницу.","ши тэйкс хим ту зэ хОспитл имИдиэтли"]],"Anna puts gauze over the wound.","Анна кладёт марлю на рану.",0],["🧰 My First Aid Box","Моя аптечка",[["I have a first aid box.","У меня есть аптечка.","ай хэв э фёст эйд бокс"],["I have sterile gauze in the box.","В аптечке у меня стерильная марля.","ай хэв стЭрайл гоз ин зэ бокс"],["I have a splint too.","У меня есть и шина.","ай хэв э сплинт ту"],["A splint is stiff.","Шина жёсткая.","э сплинт из стиф"],["I put the splint above and below the joint.","Я кладу шину выше и ниже сустава.","ай пут зэ сплинт эбАв энд билОу зэ джойнт"],["My bone is OK. No pain!","Моя кость в порядке. Боли нет!","май боун из окЭй. ноу пэйн"]],"A splint is soft.","Шина мягкая.",1]];
+const KW={fracture:"перелом",bone:"кость",pain:"боль",swelling:"опухоль",confirms:"подтверждает",splint:"шина",stiff:"жёсткий",joint:"сустав",binds:"привязывает",above:"выше",below:"ниже",compound:"сложный",sterile:"стерильный",gauze:"марля",pierces:"пронзает"};
+const hl=s=>s.replace(/\b(fracture|bone|pain|swelling|confirms|splint|stiff|joint|binds|above|below|compound|sterile|gauze|pierces)\b/gi,m=>`<span data-k="${m.toLowerCase()}" style="background:var(--sel);border-radius:6px;padding:0 3px;cursor:pointer">${m}</span>`);
+function texts(){M.append(E("h2","","Простые тексты 📚"),E("p","sub","Слова из текста «Fracture» выделены. Нажми на выделенное слово — увидишь перевод. 🔊 читает предложение."));
+TX.forEach(([t,tru,ss,q,qru,a])=>{const c=E("div","card"),note=E("div","pr","💡 Нажми на выделенное слово");c.append(E("div","en",t),E("div","ru",tru));
+ss.forEach(s=>{const r=E("div","row");r.style.margin="8px 0";r.innerHTML=`<div><div class="en" style="font-weight:600">${hl(s[0])}</div><div class="pr">[ ${s[2]} ]</div><div class="ru">${s[1]}</div></div><button class="sp">🔊</button>`;r.querySelector("button").onclick=()=>say(s[0]);c.append(r)});
+c.append(note);c.addEventListener("click",e=>{const k=e.target.dataset&&e.target.dataset.k;if(k)note.innerHTML=`💡 <b>${k}</b> = ${KW[k]}`});
+c.append(E("div","en","❓ "+q),E("div","ru",qru));const qd=E("div","msg");let d=0;
+TF.forEach((x,k)=>{const b=E("button","opt",x);b.onclick=()=>{if(d)return;if(k==a){d=1;b.classList.add("ok");qd.textContent="✅ Верно!";win()}else{b.classList.add("bad","shake");qd.textContent="🙈 Попробуй ещё"}};c.append(b)});c.append(qd);M.append(c)})}
+const nav=$("#nav");
+function show(i){cur=i;M.innerHTML="";[...nav.children].forEach((b,j)=>b.classList.toggle("on",j==i));T[i][2]();window.scrollTo(0,0)}
+T.forEach((t,i)=>{const b=E("button","",`${t[0]} ${t[1]}`);b.onclick=()=>show(i);nav.append(b)});show(0);
+</script></body></html>
